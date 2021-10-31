@@ -1,0 +1,61 @@
+const express = require("express")
+const app = express()
+const cors = require("cors")
+
+app.set("port", process.env.PORT || 5000)
+app.locals.title = "ReadMe User API"
+app.use(express.json())
+app.use(cors())
+
+app.get("/", (req, res) => {
+  res.send("Hello, you just reached the user api")
+})
+
+app.locals.users = [
+  { id: "a1", username: "carlosg", password: "123456" },
+  { id: "a2", username: "philongt", password: "456789" },
+  { id: "a3", username: "beiz", password: "789123" },
+]
+
+//get all users
+app.get("/api/v1/users", (req, res) => {
+  const users = app.locals.users
+  res.send(users)
+})
+
+//get one user by id
+app.get("/api/v1/users/:id", (req, res) => {
+  const foundUser = app.locals.users.find(user => user.id === req.params.id)
+  if (!foundUser) {
+    return res.sendStatus(404)
+  }
+  res.status(200).send(foundUser)
+})
+
+//create a new user
+app.post("/api/v1/users", (req, res) => {
+  let id = Date.now()
+  let newUser = req.body
+  for (let requiredParam of ["username", "password"]) {
+    if (!newUser[requiredParam]) {
+      res
+        .status(422)
+        .send({ error: `Expected format:{username:<string>, password: <string>}. You are missing ${requiredParam}` })
+    }
+  }
+  let { username, password } = newUser
+  app.locals.users.push({ id, username, password })
+  res.status(201).send({ id, username, password })
+})
+
+// edit existing user info
+app.patch("/api/v1/users/:id", (req, res) => {
+  let foundUser = app.locals.users.find(user => user.id === req.params.id)
+  let user = req.body
+  Object.assign(foundUser, user)
+  res.status(202).send(foundUser)
+})
+
+app.listen(app.get("port"), () => {
+  console.log(`${app.locals.title} is running on http://localhost:${app.get("port")}.`)
+})
