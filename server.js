@@ -12,9 +12,9 @@ app.get("/", (req, res) => {
 })
 
 app.locals.users = [
-  { id: "a1", username: "carlosg", password: "123456" },
-  { id: "a2", username: "philongt", password: "456789" },
-  { id: "a3", username: "beiz", password: "789123" },
+  { id: "a1", username: "carlosg", password: "123456", name: "Carlos the Fox", readingList: [] },
+  { id: "a2", username: "philongt", password: "123456", name: "Phil the Rabbit", readingList: [] },
+  { id: "a3", username: "beiz", password: "123456", name: "Bei the Sloth", readingList: [] },
 ]
 
 //get all users
