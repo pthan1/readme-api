@@ -48,13 +48,39 @@ app.post("/api/v1/users", (req, res) => {
   res.status(201).send({ id, username, password })
 })
 
-// edit existing user info
-app.patch("/api/v1/users/:id", (req, res) => {
-  let foundUser = app.locals.users.find(user => user.id === req.params.id)
-  let user = req.body
-  Object.assign(foundUser, user)
-  res.status(202).send(foundUser)
-})
+// add new book to user's reading list
+app.patch("/api/v1/users/add/:id", (req, res) => {
+  const newBook = req.body.newBook;
+  const userIndex = app.locals.users.findIndex(user => 
+   user.id === req.params.id);
+
+  const isBookFound = app.locals.users[userIndex].readingList.some(ele => ele.id === newBook.id)
+  
+  if (isBookFound) {
+    res.status(400).send("Book already exists")
+  }else {
+    app.locals.users[userIndex].readingList.push(newBook);
+    res.status(202).send(app.locals.users[userIndex].readingList)
+
+  }
+  }
+)
+
+// delete a book from user's reading list
+app.patch("/api/v1/users/delete/:id", (req, res) => {
+  const bookId = req.body.bookId;
+  console.log(bookId);
+  const userIndex = app.locals.users.findIndex(user => 
+   user.id === req.params.id);
+    
+   const bookIndex= app.locals.users[userIndex].readingList.findIndex(book => book.id === bookId)
+   app.locals.users[userIndex].readingList.splice(bookIndex, 1)
+ 
+  res.status(202).send(app.locals.users[userIndex].readingList)
+
+  })
+  
+
 
 app.listen(app.get("port"), () => {
   console.log(`${app.locals.title} is running on http://localhost:${app.get("port")}.`)
