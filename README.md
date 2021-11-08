@@ -1,8 +1,9 @@
 # API for readMe project
 
-### Starting the server
+### Setup
 
-Use the command node server.js to begin the API server.
+- Clone down this repo
+- CD into the root folder, run `node server.js` from your command line.
 
 ### Endpoints
 
