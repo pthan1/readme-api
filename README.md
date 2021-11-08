@@ -16,4 +16,4 @@
 
 ### Notes
 
-There are three users in the data when the server begins.
+There are three hard coded users in the data when the server starts.
